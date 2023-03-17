@@ -1,0 +1,109 @@
+PROGRAM Todolist
+
+START
+// PROCEDURE AND FUNCTION
+PROCEDURE addTodo (todoNow, newTask)
+    IF LENGTH OF todoNow EQUALS 0
+        STORE todoNow[LENGTH OF todoNow] WITH newTask
+    ELSE
+        STORE todoNow[LENGTH OF todoNow min 1] WITH newTask
+END PROCEDURE
+
+PROCEDURE showTodoList(todolist)
+    FOR "i" FROM 0 TO LENGTH OF "todolist"
+        PRINT "todolist[i]"
+        STORE "i" WITH i plus 1
+    END FOR
+END PROCEDURE
+
+PROCEDURE pushArray(arr, el)
+    IF LENGTH OF "arr" EQUALS 0 THEN
+        STORE "arr"[0] WITH "el"
+    END IF
+    ELSE
+        STORE "i" WITH number 0
+        WHILE "i" LESS THAN LENGTH OF arr THEN
+            IF "arr"["i"] EQUALS null THEN
+                SET "arr"["i"] WITH "el"
+            END IF
+        END WHILE
+    END ELSE
+END PROCEDURE
+
+FUNCTION findTask(task, todo)
+    SET "i" WITH number 0
+    WHILE "i" less than LENGTH OF todo THEN
+        IF todo[i][1] EQUALS task[1] THEN
+            RETURN i
+        END IF
+    END WHILE
+    RETURN -1
+END FUNCTION
+
+PROCEDURE editTask(task, todo)
+    STORE "taskFinder" WITH (CALL findTask(task, todo))
+    PRINT "todo"["taskFinder"]
+    IF "taskFinder" NOT EQUALS (-1)
+        SET "todo[taskFinder]" WITH PROMPT USER to enter new task
+        PRINT "Update success"
+    END IF
+END PROCEDURE
+
+PROCEDURE setTaskStatusToDone(task, todo)
+    READ AND WRITE "taskFinder" WITH number FROM (CALL findTask(task, todo))
+    IF "taskFinder" NOT EQUALS (-1)
+        SET "todo[taskFinder]" WITH true
+    END IF
+END PROCEDURE
+
+PROCEDURE deleteTask(task, todo)
+    READ AND WRITE "taskFinder" WITH number FROM (CALL findTask(task, todo))
+    IF "taskFinder" NOT EQUALS (-1)
+        STORE "newTodo" WITH array [ ]
+        STORE "i" WITH number 0
+        WHILE "i" LESS THAN LENGTH OF "todo" THEN
+            IF "todo"["i"][1] NOT EQUALS "task" THEN
+                CALL pushArray("newTodo", "todo"["i"])
+            END IF
+        END WHILE
+        SET "todo" WITH array "newTodo"
+    END IF
+END PROCEDURE
+
+// MAIN PROGRAM
+PRINT "Masukkan Tanggal sekarang"
+READ AND WRITE "date" WITH STRING
+STORE "todo" WITH ARRAY [ ]
+STORE "isTrue" WITH TRUE
+WHILE "isTrue" EQUALS TRUE
+    PRINT "date"
+    IF LENGTH OF "todo" EQUALS 0 THEN
+        PRINT "Task Kosong"
+        PRINT "Apakah ingin memasukkan task baru?"
+        READ AND WRITE "isAddTask" WITH Boolean
+        IF "isAddTask" EQUALS TRUE THEN
+            READ AND WRITE "newTaskName" WITH String
+            STORE "newTask" WITH array [false, "newTaskName"]
+            CALL addTodo("todo", "newTask")
+        END IF
+    END IF
+    ELSE
+        CALL showTodoList(todo)
+        IF a task completed THEN
+            READ AND WRITE "doneTask" WITH String
+            CALL setTaskStatusToDone("doneTask", "todo")
+        END IF
+        ELSE IF user want to edit task THEN
+            READ AND WRITE "taskToEdit" WITH String
+            CALL editTask("taskToEdit", "todo")
+        END ELSE IF
+        ELSE IF user want to delete task THEN
+            READ AND WRITE "taskDeleted" WITH STRING
+            READ AND WRITE "isAccDeleted" WITH Boolean
+            IF "isAccDeleted" EQUALS TRUE THEN
+                CALL deleteTask("taskDeleted", "todo")
+            END IF
+        END ELSE IF 
+        ELSE
+            SET "isTrue" WITH FALSE
+END
